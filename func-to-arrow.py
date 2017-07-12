@@ -4,6 +4,7 @@ import fileinput
 funcString = "function ("
 openBracket = '('
 closingBracket = ') {'
+closingBracket2 = '){'
 arrowSyntax = ') => {'
 
 def main():
@@ -24,9 +25,10 @@ def main():
         if (jsFileExt in input1):
             parseFile(input1, False, False)
         else:
-            for f in os.listdir(input1):
-                if (jsFileExt in f):
-                    parseFile(f, False, input1)
+            parseDir(input1)
+            # for f in os.listdir(input1):
+            #     if (jsFileExt in f):
+            #         parseFile(f, False, input1)
 
     elif (len(sys.argv) == 3):
         fileIn = sys.argv[1]
@@ -39,6 +41,14 @@ def main():
 
     exit()
 
+def parseDir(folder):
+    for f in os.listdir(folder):
+        if ('.js' in f):
+            parseFile(f, False, folder)
+        elif (os.path.isdir(os.path.join(folder, f)) and (f != 'node_modules')):
+            parseDir(os.path.join(folder, f))
+
+    return
 
 def parseFile(fileIn, fileOut, directory):
     if (fileOut):
@@ -66,11 +76,21 @@ def parseFile(fileIn, fileOut, directory):
 
     if isSame:
         os.remove(os.path.join(directory, newFileName))
+        print 'No changes were made to ' + fileIn
+    else:
+        print 'A new file has been created for ' + fileIn
+        oldFile = os.path.join(directory, newFileName.replace('-new', '-old'))
+        os.rename(fileIn, oldFile)
+        print fileIn + ' has been renamed to ' + oldFile
+        print newFileName + ' has been renamed to ' + fileIn
+        os.rename(os.path.join(directory, newFileName), fileIn)
+
 
 def arrowStyle(line):
     if (funcString in line):
         newLine = line.replace(funcString, openBracket)
         newLine = newLine.replace(closingBracket, arrowSyntax)
+        newLine = newLine.replace(closingBracket2, arrowSyntax)
         return newLine
     else:
         return line
