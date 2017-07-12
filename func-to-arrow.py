@@ -65,8 +65,8 @@ def parseFile(fileIn, fileOut, directory):
     newFile.close();
 
     if isSame:
-        os.remove(newFile)
-        
+        os.remove(os.path.join(directory, newFileName))
+
 def arrowStyle(line):
     if (funcString in line):
         newLine = line.replace(funcString, openBracket)
