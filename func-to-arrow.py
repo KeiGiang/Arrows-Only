@@ -54,11 +54,19 @@ def parseFile(fileIn, fileOut, directory):
     else:
         newFile = open(newFileName, 'a+')
 
+    isSame = True
+
     for line in open(fileIn):
-        newFile.write(arrowStyle(line))
+        toWrite = arrowStyle(line)
+        newFile.write(toWrite)
+        if (line != toWrite):
+            isSame = False
 
     newFile.close();
 
+    if isSame:
+        os.remove(newFile)
+        
 def arrowStyle(line):
     if (funcString in line):
         newLine = line.replace(funcString, openBracket)
