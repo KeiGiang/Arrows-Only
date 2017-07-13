@@ -43,7 +43,7 @@ def main():
 
 def parseDir(folder):
     for f in os.listdir(folder):
-        if ('.js' in f):
+        if (('.js' in f) and ('.min.' not in f)):
             parseFile(f, False, folder)
         elif (os.path.isdir(os.path.join(folder, f)) and (f != 'node_modules')):
             parseDir(os.path.join(folder, f))
@@ -78,11 +78,11 @@ def parseFile(fileIn, fileOut, directory):
         os.remove(os.path.join(directory, newFileName))
         print 'No changes were made to ' + fileIn
     else:
-        print 'A new file has been created for ' + fileIn
+        print 'Changes were made to ' + fileIn
         oldFile = os.path.join(directory, newFileName.replace('-new', '-old'))
         os.rename(fileIn, oldFile)
-        print fileIn + ' has been renamed to ' + oldFile
-        print newFileName + ' has been renamed to ' + fileIn
+        # print fileIn + ' has been renamed to ' + oldFile
+        # print newFileName + ' has been renamed to ' + fileIn
         os.rename(os.path.join(directory, newFileName), fileIn)
 
 
